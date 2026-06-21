@@ -4,74 +4,128 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Search Typeahead</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- Outfit font for that modern, sleek look -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
+<!-- Ambient background shapes -->
+<div class="ambient-bg">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+</div>
+
 <header class="topbar">
-    <div class="brand">Search<span class="accent">.</span></div>
-    <nav class="nav">Typeahead · Live Suggestions</nav>
+    <div class="brand">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-icon"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Search<span class="accent">.</span>
+    </div>
+    <nav class="nav">
+        <a href="#" class="nav-link">Home</a>
+        <a href="#" class="nav-link">Documentation</a>
+        <a href="https://github.com/Sainiketh1907/Search-Typeahead" class="nav-link active">GitHub</a>
+    </nav>
 </header>
 
 <main class="container">
     <section class="hero">
-        <h1>Find what matters — instantly</h1>
-        <p class="subtitle">Smart suggestions powered by caching, Postgres and fast batch writes.</p>
+        <div class="hero-badge">✨ Powered by Postgres & Redis</div>
+        <h1>Find what matters <span class="text-gradient">— instantly</span></h1>
+        <p class="subtitle">Experience lightning-fast autocomplete powered by smart caching, optimized batch writes, and an earthy modern aesthetic.</p>
 
-        <div class="search-card">
-            <label for="searchBox" class="visually-hidden">Search</label>
-            <div class="search-input-wrap">
-                <svg class="search-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M21 20l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                <input id="searchBox" type="search" placeholder="Search anything — e.g. 'java streams'" autocomplete="off" aria-autocomplete="list" aria-controls="suggestions" />
-            </div>
-
-            <ul id="suggestions" role="listbox" aria-label="Suggestions"></ul>
-
-            <div class="actions-row">
-                <div class="mode-selector">
-                    <span class="mode-label">Mode:</span>
-                    <label class="switch-container">
-                        <input type="radio" id="modeEnhanced" name="rankingMode" value="enhanced" checked />
-                        <span class="radio-label">Enhanced (Recency)</span>
-                    </label>
-                    <label class="switch-container">
-                        <input type="radio" id="modeBasic" name="rankingMode" value="basic" />
-                        <span class="radio-label">Basic (Popular)</span>
-                    </label>
+        <div class="search-card-wrapper">
+            <div class="search-card">
+                <label for="searchBox" class="visually-hidden">Search</label>
+                <div class="search-input-wrap">
+                    <svg class="search-icon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input id="searchBox" type="search" placeholder="Search anything — e.g. 'java streams'" autocomplete="off" aria-autocomplete="list" aria-controls="suggestions" />
+                    <div class="kbd-shortcut">
+                        <kbd>⌘</kbd><kbd>K</kbd>
+                    </div>
                 </div>
-                <div class="actions">
-                    <button id="searchBtn">Search</button>
-                </div>
-            </div>
 
-            <div id="cacheDebugPanel" class="cache-debug-panel" style="display: none;">
-                <span class="debug-title">Cache Debug:</span>
-                <span class="debug-value">Node: <strong id="debugNode">None</strong></span>
-                <span class="debug-divider">|</span>
-                <span class="debug-value">Status: <span id="debugStatus" class="badge">MISS</span></span>
+                <ul id="suggestions" role="listbox" aria-label="Suggestions"></ul>
+
+                <div class="actions-row">
+                    <div class="mode-selector">
+                        <span class="mode-label">Ranking Engine:</span>
+                        <div class="toggle-group">
+                            <label class="toggle-btn">
+                                <input type="radio" id="modeEnhanced" name="rankingMode" value="enhanced" checked />
+                                <span class="toggle-text">Enhanced</span>
+                            </label>
+                            <label class="toggle-btn">
+                                <input type="radio" id="modeBasic" name="rankingMode" value="basic" />
+                                <span class="toggle-text">Basic</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <button id="searchBtn">
+                            <span>Search</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="cacheDebugPanel" class="cache-debug-panel" style="display: none;">
+                    <div class="debug-info">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M3 15h6"/><path d="M3 18h6"/></svg>
+                        <span class="debug-title">Cache Status:</span>
+                        <span class="debug-value">Node <strong id="debugNode">None</strong></span>
+                    </div>
+                    <span id="debugStatus" class="badge">MISS</span>
+                </div>
             </div>
         </div>
     </section>
 
     <section class="panels">
         <div class="result-card">
-            <h2>Result</h2>
-            <div id="result">Start searching...</div>
+            <div class="card-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                <h2>Live Result</h2>
+            </div>
+            <div class="result-content">
+                <div id="result" class="empty-state">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="empty-icon"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <p>Start typing to see magic happen...</p>
+                </div>
+            </div>
         </div>
 
         <aside class="trending-card">
             <div class="trending-header">
-                <h3>Trending</h3>
-                <button id="refreshTrending" class="icon-btn" title="Refresh">⟳</button>
+                <div class="card-header">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg>
+                    <h3>Trending Searches</h3>
+                </div>
+                <button id="refreshTrending" class="icon-btn" title="Refresh">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                </button>
             </div>
-            <div id="trending" class="chips"></div>
+            <div id="trending" class="chips">
+                <!-- Trending items populated by JS -->
+            </div>
         </aside>
     </section>
 </main>
 
-<footer class="footer">Built with ❤️ — lightweight demo</footer>
+<footer class="footer">
+    <p>Built with ❤️ by Sainiketh — Search Typeahead Demo</p>
+</footer>
 
 <script src="script.js"></script>
+<script>
+    // Simple script to handle cmd+k to focus search
+    document.addEventListener('keydown', (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+            e.preventDefault();
+            document.getElementById('searchBox').focus();
+        }
+    });
+</script>
 </body>
 </html>
