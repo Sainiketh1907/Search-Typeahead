@@ -59,9 +59,92 @@ button.icon-btn{background:transparent;border:none;color:var(--muted);cursor:poi
 .chip{background:rgba(255,255,255,0.03);padding:8px 12px;border-radius:999px;color:var(--muted);font-weight:600;border:1px solid rgba(255,255,255,0.02);cursor:pointer}
 .chip:hover{background:rgba(255,255,255,0.05)}
 
+.actions-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 14px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.mode-selector {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.mode-label {
+    font-size: 0.9rem;
+    color: var(--muted);
+    font-weight: 600;
+}
+
+.switch-container {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.switch-container input[type=radio] {
+    accent-color: var(--accent);
+}
+
+.cache-debug-panel {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.02);
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.03);
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+
+.debug-title {
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.debug-divider {
+    color: rgba(255, 255, 255, 0.1);
+}
+
+.badge {
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 800;
+    font-size: 0.75rem;
+}
+
+.badge-hit {
+    background: rgba(34, 197, 94, 0.15);
+    color: #4ade80;
+    border: 1px solid rgba(34, 197, 94, 0.25);
+}
+
+.badge-miss {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
 .footer{margin:30px auto;text-align:center;color:var(--muted);font-size:0.9rem}
 
 @media (max-width:900px){
     .panels{grid-template-columns:1fr}
     .trending-card{order:2}
+    .actions-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .actions {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+    }
 }

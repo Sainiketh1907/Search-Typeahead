@@ -1,3 +1,5 @@
+const API_BASE = window.location.port === '5500' ? 'http://localhost:8080' : '';
+
 const searchBox = document.getElementById('searchBox');
 const suggestionsList = document.getElementById('suggestions');
 const resultEl = document.getElementById('result');
@@ -12,18 +14,54 @@ function debounce(fn, wait = 250){
     let t; return (...args)=>{ clearTimeout(t); t = setTimeout(()=>fn(...args), wait); };
 }
 
-async function fetchSuggestions(q){
-    if(!q) { renderSuggestions([]); return; }
-    renderSuggestions([{loading:true}]);
+async function fetchCacheDebug(q){
+    const panel = document.getElementById('cacheDebugPanel');
+    const nodeEl = document.getElementById('debugNode');
+    const statusEl = document.getElementById('debugStatus');
+    if(!q) { panel.style.display = 'none'; return; }
     try{
-        const res = await fetch(`/suggest?q=${encodeURIComponent(q)}`);
+        const res = await fetch(`${API_BASE}/cache/debug?prefix=${encodeURIComponent(q)}`);
+        const data = await res.json();
+        nodeEl.textContent = data.responsibleNode || 'None';
+        if(data.isHit){
+            statusEl.textContent = 'HIT';
+            statusEl.className = 'badge badge-hit';
+        } else {
+            statusEl.textContent = 'MISS';
+            statusEl.className = 'badge badge-miss';
+        }
+        panel.style.display = 'flex';
+    }catch(e){
+        panel.style.display = 'none';
+    }
+}
+
+async function fetchSuggestions(q){
+    if(!q) { 
+        renderSuggestions([]); 
+        document.getElementById('cacheDebugPanel').style.display = 'none';
+        return; 
+    }
+    renderSuggestions([{loading:true}]);
+    fetchCacheDebug(q);
+    try{
+        const mode = document.querySelector('input[name="rankingMode"]:checked').value;
+        const res = await fetch(`${API_BASE}/suggest?q=${encodeURIComponent(q)}&mode=${mode}`);
         const data = await res.json();
         suggestions = data;
         renderSuggestions(data);
+        setTimeout(() => fetchCacheDebug(q), 100);
     }catch(e){
         renderSuggestions([]);
     }
 }
+
+document.querySelectorAll('input[name="rankingMode"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+        const q = searchBox.value.trim();
+        if(q) fetchSuggestions(q);
+    });
+});
 
 const debouncedFetch = debounce((q)=>fetchSuggestions(q),200);
 
@@ -76,7 +114,7 @@ function selectSuggestion(item){
 async function submitSearch(){
     const query = searchBox.value.trim();
     if(!query) return;
-    try{ await fetch(`/search?query=${encodeURIComponent(query)}`,{method:'POST'}); }
+    try{ await fetch(`${API_BASE}/search?query=${encodeURIComponent(query)}`,{method:'POST'}); }
     catch(e){}
     resultEl.innerHTML = `You searched for <strong>${escapeHtml(query)}</strong>`;
     loadTrending();
@@ -86,7 +124,7 @@ function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 
 async function loadTrending(){
     try{
-        const res = await fetch('/trending');
+        const res = await fetch(`${API_BASE}/trending`);
         const data = await res.json();
         trendingEl.innerHTML='';
         data.forEach(t=>{

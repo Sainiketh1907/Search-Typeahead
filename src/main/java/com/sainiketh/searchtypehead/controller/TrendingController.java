@@ -1,14 +1,13 @@
 package com.sainiketh.searchtypehead.controller;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sainiketh.searchtypehead.model.SearchEvent;
 import com.sainiketh.searchtypehead.repository.SearchEventRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 public class TrendingController {
@@ -21,25 +20,8 @@ public class TrendingController {
 
     @GetMapping("/trending")
     public List<String> trending() {
-
-        List<SearchEvent> events = repository.findAll();
-
-        Map<String, Long> counts =
-                events.stream()
-                        .collect(Collectors.groupingBy(
-                                SearchEvent::getQuery,
-                                Collectors.counting()
-                        ));
-
-        return counts.entrySet()
-                .stream()
-                .sorted((a, b) ->
-                        Long.compare(
-                                b.getValue(),
-                                a.getValue()
-                        ))
-                .limit(10)
-                .map(Map.Entry::getKey)
-                .toList();
+        // Query top 10 queries within the last 1 hour
+        LocalDateTime cutoff = LocalDateTime.now().minusHours(1);
+        return repository.findTrendingSearches(cutoff, PageRequest.of(0, 10));
     }
 }

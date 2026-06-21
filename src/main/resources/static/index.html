@@ -28,8 +28,28 @@
 
             <ul id="suggestions" role="listbox" aria-label="Suggestions"></ul>
 
-            <div class="actions">
-                <button id="searchBtn">Search</button>
+            <div class="actions-row">
+                <div class="mode-selector">
+                    <span class="mode-label">Mode:</span>
+                    <label class="switch-container">
+                        <input type="radio" id="modeEnhanced" name="rankingMode" value="enhanced" checked />
+                        <span class="radio-label">Enhanced (Recency)</span>
+                    </label>
+                    <label class="switch-container">
+                        <input type="radio" id="modeBasic" name="rankingMode" value="basic" />
+                        <span class="radio-label">Basic (Popular)</span>
+                    </label>
+                </div>
+                <div class="actions">
+                    <button id="searchBtn">Search</button>
+                </div>
+            </div>
+
+            <div id="cacheDebugPanel" class="cache-debug-panel" style="display: none;">
+                <span class="debug-title">Cache Debug:</span>
+                <span class="debug-value">Node: <strong id="debugNode">None</strong></span>
+                <span class="debug-divider">|</span>
+                <span class="debug-value">Status: <span id="debugStatus" class="badge">MISS</span></span>
             </div>
         </div>
     </section>
