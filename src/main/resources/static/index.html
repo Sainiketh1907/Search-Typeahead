@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search Typeahead</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="topbar">
+    <div class="brand">Search<span class="accent">.</span></div>
+    <nav class="nav">Typeahead · Live Suggestions</nav>
+</header>
+
+<main class="container">
+    <section class="hero">
+        <h1>Find what matters — instantly</h1>
+        <p class="subtitle">Smart suggestions powered by caching, Postgres and fast batch writes.</p>
+
+        <div class="search-card">
+            <label for="searchBox" class="visually-hidden">Search</label>
+            <div class="search-input-wrap">
+                <svg class="search-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M21 20l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <input id="searchBox" type="search" placeholder="Search anything — e.g. 'java streams'" autocomplete="off" aria-autocomplete="list" aria-controls="suggestions" />
+            </div>
+
+            <ul id="suggestions" role="listbox" aria-label="Suggestions"></ul>
+
+            <div class="actions">
+                <button id="searchBtn">Search</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="panels">
+        <div class="result-card">
+            <h2>Result</h2>
+            <div id="result">Start searching...</div>
+        </div>
+
+        <aside class="trending-card">
+            <div class="trending-header">
+                <h3>Trending</h3>
+                <button id="refreshTrending" class="icon-btn" title="Refresh">⟳</button>
+            </div>
+            <div id="trending" class="chips"></div>
+        </aside>
+    </section>
+</main>
+
+<footer class="footer">Built with ❤️ — lightweight demo</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
